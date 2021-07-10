@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  ms-content-manager:
+    container_name: ms-content-manager
+    build:
+      context: ..
+      dockerfile: ./build/Dockerfile
+    restart: on-failure
+    ports:
+      - 8000:8000
+    command: sh -c "./ms-content-manager"
