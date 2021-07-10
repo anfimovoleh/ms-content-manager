@@ -1,9 +1,3 @@
-.PHONY: build
-.PHONY: tests
-.PHONY: run
-.PHONY: docker_build
-
-
 build: ## Build application
 	GOSUMDB=off go build -o ms-content-manager -v ./cmd/api/
 
@@ -15,3 +9,12 @@ tests: ## Run tests
 
 docker_build:
 	docker build -t ms-content-manager -f=./build/Dockerfile .
+
+docker_compose_up:
+	docker-compose -f ./build/docker-compose.yaml up -d
+
+docker_compose_down:
+	docker-compose -f ./build/docker-compose.yaml down
+
+docker_compose_stop:
+	docker-compose -f ./build/docker-compose.yaml stop
