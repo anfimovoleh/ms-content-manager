@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/anfimovoleh/ms-content-manager/server"
+
 	"github.com/anfimovoleh/ms-content-manager/config"
 	"github.com/pkg/errors"
 	"go.uber.org/zap"
@@ -28,11 +30,13 @@ func (a API) Start() error {
 	serverHost := fmt.Sprintf("%s:%s", httpConfiguration.Host, httpConfiguration.Port)
 	log.With(
 		zap.String("addr", serverHost),
-	).Info(fmt.Sprintf("starting api"))
+	).Info("starting api")
+
+	router := server.Router()
 
 	httpServer := http.Server{
 		Addr:    serverHost,
-		Handler: nil,
+		Handler: router,
 	}
 
 	if err := httpServer.ListenAndServe(); err != nil {
