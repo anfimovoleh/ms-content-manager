@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 
+	"github.com/go-chi/chi/middleware"
+
 	"github.com/anfimovoleh/ms-content-manager/server/middlewares"
 
 	"github.com/go-chi/chi"
@@ -10,8 +12,11 @@ import (
 
 func Router() chi.Router {
 	router := chi.NewRouter()
-
 	privateAddressPool := middlewares.PrivateAddressPool()
+
+	router.Use(
+		middleware.Recoverer,
+	)
 
 	router.Group(func(r chi.Router) {
 		r.Use(middlewares.VerifyRemoteAddressIsPrivate(privateAddressPool))
