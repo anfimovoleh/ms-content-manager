@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 
 	"github.com/anfimovoleh/ms-content-manager/server/middlewares"
 
@@ -14,7 +15,17 @@ func Router() chi.Router {
 	router := chi.NewRouter()
 	privateAddressPool := middlewares.PrivateAddressPool()
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"*", "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
+		AllowedHeaders:   []string{"*", "Accept", "Authorization", "Content-Type", "X-CSRF-Asset", "x-auth"},
+		ExposedHeaders:   []string{"*", "Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
+
 	router.Use(
+		c.Handler,
 		middleware.Recoverer,
 	)
 
