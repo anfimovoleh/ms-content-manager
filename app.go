@@ -32,7 +32,7 @@ func (a API) Start() error {
 		zap.String("addr", serverHost),
 	).Info("starting api")
 
-	router := server.Router()
+	router := server.Router(a.cfg)
 
 	httpServer := http.Server{
 		Addr:    serverHost,

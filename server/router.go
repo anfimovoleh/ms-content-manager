@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 
+	"github.com/anfimovoleh/ms-content-manager/config"
+
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 
@@ -11,7 +13,7 @@ import (
 	"github.com/go-chi/chi"
 )
 
-func Router() chi.Router {
+func Router(cfg config.Config) chi.Router {
 	router := chi.NewRouter()
 	privateAddressPool := middlewares.PrivateAddressPool()
 
@@ -25,6 +27,7 @@ func Router() chi.Router {
 	})
 
 	router.Use(
+		middlewares.Logger(cfg.Log(), cfg.HTTP().ReqDurThreshold),
 		c.Handler,
 		middleware.Recoverer,
 	)

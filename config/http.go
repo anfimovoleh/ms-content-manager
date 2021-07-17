@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"net/url"
+	"time"
 
 	"go.uber.org/zap"
 
@@ -12,8 +13,9 @@ import (
 )
 
 type HTTP struct {
-	Host string `env:"CM_HTTP_HOST" envDefault:"localhost"`
-	Port string `env:"CM_HTTP_PORT" envDefault:"8080"`
+	Host            string        `env:"CM_HTTP_HOST" envDefault:"localhost"`
+	Port            string        `env:"CM_HTTP_PORT" envDefault:"8080"`
+	ReqDurThreshold time.Duration `env:"CM_HTTP_REQ_DUR_THRESHOLD" envDefault:"5s"`
 }
 
 func (h *HTTP) URL() (*url.URL, error) {
