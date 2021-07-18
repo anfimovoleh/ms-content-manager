@@ -15,7 +15,5 @@ func NewUploadDocumentHandler(log *zap.Logger) *UploadDocumentHandler {
 }
 
 func (h UploadDocumentHandler) Handle(w http.ResponseWriter, r *http.Request) {
-	h.log.Debug("started")
 	_, _ = w.Write([]byte("upload document"))
-	h.log.Debug("finished")
 }

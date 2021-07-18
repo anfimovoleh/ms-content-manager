@@ -15,7 +15,6 @@ import (
 
 func Router(cfg config.Config) chi.Router {
 	router := chi.NewRouter()
-	privateAddressPool := middlewares.PrivateAddressPool()
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -32,14 +31,18 @@ func Router(cfg config.Config) chi.Router {
 		middleware.Recoverer,
 	)
 
-	router.Group(func(r chi.Router) {
-		r.Use(middlewares.VerifyRemoteAddressIsPrivate(privateAddressPool))
-		router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			_, _ = w.Write(
-				[]byte(`{"component": "ms-content-manager"}`),
-			)
-		})
-	})
+	router.Mount("/admin", adminRouter())
 
 	return router
+}
+
+// A completely separate router for administrator routes
+func adminRouter() http.Handler {
+	r := chi.NewRouter()
+	r.Use(
+		middlewares.VerifyRemoteAddressIsPrivate(middlewares.PrivateAddressPool()),
+		middlewares.BasicAuth("admin", "admin"),
+	)
+
+	return r
 }
