@@ -5,12 +5,11 @@ import (
 
 	"github.com/anfimovoleh/ms-content-manager/server/handlers"
 
+	"github.com/anfimovoleh/go-chi-middlewares"
 	"github.com/anfimovoleh/ms-content-manager/config"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
-
-	"github.com/anfimovoleh/ms-content-manager/server/middlewares"
 
 	"github.com/go-chi/chi"
 )
@@ -28,7 +27,7 @@ func Router(cfg config.Config) chi.Router {
 	})
 
 	router.Use(
-		middlewares.Logger(cfg.Log(), cfg.HTTP().ReqDurThreshold),
+		chiwares.Logger(cfg.Log(), cfg.HTTP().ReqDurThreshold),
 		c.Handler,
 		middleware.Recoverer,
 	)
@@ -42,8 +41,8 @@ func Router(cfg config.Config) chi.Router {
 func adminRouter(cfg config.Config) http.Handler {
 	r := chi.NewRouter()
 	r.Use(
-		middlewares.VerifyRemoteAddressIsPrivate(middlewares.PrivateAddressPool()),
-		middlewares.BasicAuth("admin", "admin"),
+		chiwares.BasicAuth("admin", "admin"),
+		chiwares.VerifyRemoteAddressIsPrivate(nil),
 	)
 
 	r.Route("/upload", func(r chi.Router) {
